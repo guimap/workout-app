@@ -11,6 +11,7 @@ jobs:
       region: us-east-1
   build-and-deploy:
     needs: assume-oidc
+    runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ needs.assume-oidc.outputs.aws-access-key-id }}
       AWS_SECRET_ACCESS_KEY: ${{ needs.assume-oidc.outputs.aws-secret-access-key }}
