@@ -1,3 +1,4 @@
+name: Connect to an AWS role from a GitHub repository
 # Controla quando a ação será executada. Invoca o workflow em eventos push, mas somente para o branch principal
 on:
   push:
@@ -29,4 +30,3 @@ jobs:
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
- 3. Modifique o workflow para refletir as informações da sua conta AWS:
