@@ -1,0 +1,15 @@
+<mat-card *ngFor="let w of svc.list()" class="workout">
+    <div class="card-head">
+        <h2>{{ w.title }}</h2>
+        <div class="actions">
+            <a mat-button color="primary" [routerLink]="['/treino', w.id]">Abrir</a>
+            <button mat-icon-button (click)="remove(w.id)"><mat-icon>delete</mat-icon></button>
+        </div>
+    </div>
+    <mat-chip-set>
+        <mat-chip appearance="outlined">Exercícios: {{ w.exercises.length }}</mat-chip>
+        <mat-chip appearance="outlined">ID: {{ w.id }}</mat-chip>
+    </mat-chip-set>
+    <mat-progress-bar mode="determinate" [value]="progressOf(w.exercises)"></mat-progress-bar>
+    <small *ngIf="w?.exercises" class="progress-label">{{ progressOf(w?.exercises) }}% concluído</small>
+</mat-card>

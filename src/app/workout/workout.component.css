@@ -1,0 +1,101 @@
+.container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px 16px 64px;
+}
+
+.error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 8px;
+    color: #b91c1c;
+}
+
+.workout-card {
+    border-radius: 24px;
+    padding: 12px 20px 24px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.card-header h1 {
+    margin: 12px 0;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.section {
+    padding: 16px 0;
+}
+
+.section-title {
+    margin: 0 0 12px;
+    font-size: 1.05rem;
+    color: #6b7280;
+    font-weight: 600;
+    letter-spacing: .2px;
+}
+
+.row {
+    display: grid;
+    gap: 12px;
+    align-items: center;
+    grid-template-columns: auto 1fr 140px;
+    padding: 6px 0;
+}
+
+.single {}
+
+.desc .title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.kg {
+    width: 140px;
+}
+
+.group {
+    background: #fafafa;
+    border-radius: 12px;
+    padding: 8px 12px;
+}
+
+.group-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.group-items .row {
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+.progress-label {
+    display: block;
+    color: #6b7280;
+    margin-top: 6px;
+}
+
+.timer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+}
+
+.time {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+}

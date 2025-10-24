@@ -1,0 +1,112 @@
+<div class="container">
+    <!-- estados globais -->
+    <mat-progress-bar mode="indeterminate" *ngIf="svc.loading()"></mat-progress-bar>
+    <div class="error" *ngIf="svc.error()">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ svc.error() }}</span>
+        <button mat-button color="primary" (click)="svc.reload()">Tentar novamente</button>
+    </div>
+
+    <ng-container *ngIf="!svc.loading() && !svc.error()">
+        <mat-card class="workout-card" *ngIf="day(); else notFound">
+            <div class="card-header">
+                <h1>Treino — {{ day()!.id }}</h1>
+            </div>
+
+            <!-- Timer -->
+            <section class="section timer">
+                <div>
+                    <h2 class="section-title">Tempo de treino</h2>
+                    <div class="time">{{ timeLeft$ | async }}</div>
+                </div>
+                <div class="actions">
+                    <button mat-raised-button color="primary" (click)="start()" *ngIf="!running">Iniciar</button>
+                    <button mat-stroked-button color="primary" (click)="pause()" *ngIf="running">Pausar</button>
+                    <button mat-button (click)="reset()">Resetar</button>
+                </div>
+            </section>
+
+            <mat-divider></mat-divider>
+
+            <!-- Lista de exercícios -->
+            <section class="section">
+
+                <h2 class="section-title">Exercícios</h2>
+                <ng-container *ngFor="let item of getWorkouts()">
+                    <div class=" group" *ngIf="isGroup(item); else single">
+                        <div class="group-header">
+                            <mat-icon>link</mat-icon>
+                            <span>Superset</span>
+                        </div>
+
+                        <div class="group-items">
+                            <div class="row" *ngFor="let ex of item; index as ei;">
+                                <mat-checkbox [(ngModel)]="ex.done"></mat-checkbox>
+
+                                <div class="desc">
+                                    <div class="title">{{ ex.name }}</div>
+                                    <mat-chip-set>
+                                        <mat-chip appearance="outlined">{{ ex.series }}</mat-chip>
+                                    </mat-chip-set>
+                                </div>
+
+                                <mat-form-field appearance="outline" class="kg">
+                                    <mat-label>Kg</mat-label>
+                                    <input matInput type="number" min="0" step="0.5" [(ngModel)]="ex.kg" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item simples -->
+                    <ng-template #single>
+                        <div class="row single">
+                            <mat-checkbox [(ngModel)]="item.done"></mat-checkbox>
+
+                            <div class="desc">
+                                <div class="title">{{ item.name }}</div>
+                                <mat-chip-set>
+                                    <mat-chip appearance="outlined">{{ item.series }}</mat-chip>
+                                </mat-chip-set>
+                            </div>
+
+                            <mat-form-field appearance="outline" class="kg">
+                                <mat-label>Kg</mat-label>
+                                <input matInput type="number" min="0" step="0.5" [(ngModel)]="item.kg" />
+                            </mat-form-field>
+                        </div>
+                    </ng-template>
+
+                    <mat-divider></mat-divider>
+                </ng-container>
+            </section>
+
+            <!-- Actions Buttons -->
+            <section class="section timer">
+                <div>
+                    <h2 class="section-title">Salvar carga ?</h2>
+                </div>
+                <div class="actions">
+                    <button mat-raised-button color="primary" (click)="saveKg()">Salvar</button>
+                </div>
+            </section>
+            <!-- Progresso -->
+            <section class="section">
+                <h2 class="section-title">Progresso</h2>
+                <mat-progress-bar mode="determinate" [value]="progress()"></mat-progress-bar>
+                <small class="progress-label">{{ progress() }}% concluído</small>
+            </section>
+
+            <mat-divider></mat-divider>
+
+
+        </mat-card>
+
+        <ng-template #notFound>
+            <mat-card class="workout-card">
+                <h2>Treino não encontrado</h2>
+                <p>Verifique o ID na URL ou volte para a página inicial.</p>
+            </mat-card>
+        </ng-template>
+    </ng-container>
+</div>
