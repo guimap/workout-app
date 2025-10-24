@@ -17,6 +17,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { Exercise, Workout } from '../core/workout.model';
 import { interval, map, Observable, shareReplay } from 'rxjs';
+import { E, T } from '@angular/cdk/keycodes';
 
 type Ex = { description: string; series: string; done?: boolean; kg?: number | null };
 type Item = Ex | Ex[]; // simples ou grupo
@@ -152,9 +153,19 @@ export class WorkoutComponent {
      * @desc salva a carga de cada exercicio
      */
     saveKg() {
-        console.log(this.day())
         const state = JSON.stringify(this.day()?.exercises);
-        sessionStorage.setItem(this.day()!.id, state);
+        const cloned = JSON.parse(state) as Exercise[] | Exercise[][];
+        for (const it of cloned) {
+            if (Array.isArray(it)) {
+                for (const sub of it) {
+                    sub.done = false;
+                }
+            } else {
+                it.done = false;
+            }
+        }
+        console.log(cloned)
+        sessionStorage.setItem(this.day()!.id, JSON.stringify(cloned));
     }
 
 
