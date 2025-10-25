@@ -4,6 +4,11 @@ on:
   push:
     branches: [ "main" ]
 
+# A permissão pode ser adicionada no nível do job ou do workflow  
+permissions:
+  id-token: write   # Isso é necessário para solicitar o JWT
+  contents: read    # Isso é necessário para ações/checkout
+  
 jobs:
   assume-oidc:
     uses: ./.github/workflows/assume-role.yaml

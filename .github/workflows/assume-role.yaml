@@ -1,26 +1,16 @@
 name: OIDC Assume Role
 # Controla quando a ação será executada. Invoca o workflow em eventos push, mas somente para o branch principal
 on:
-  # push:
-  #   branches: [ main ]
-  # pull_request:
-  #   branches: [ main ]
-
   workflow_call:
-      inputs:
-        region:
-          required: true
-          type: string
-      secrets: {}
-
-# env:
-  
-#   AWS_REGION : "us-east-1" #Altere para refletir sua região
-
+    inputs:
+      region:
+        required: true
+        type: string
+    secrets: {}
 # A permissão pode ser adicionada no nível do job ou do workflow  
 permissions:
-      id-token: write   # Isso é necessário para solicitar o JWT
-      contents: read    # Isso é necessário para ações/checkout
+  id-token: write   # Isso é necessário para solicitar o JWT
+  contents: read    # Isso é necessário para ações/checkout
 jobs:
   AssumeRoleAndCallIdentity:
     runs-on: ubuntu-latest
