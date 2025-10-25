@@ -27,3 +27,9 @@ jobs:
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
+      - name: Export credentials
+        id: export
+        run: |
+          echo "aws-access-key-id=${{ env.AWS_ACCESS_KEY_ID }}" >> $GITHUB_OUTPUT
+          echo "aws-secret-access-key=${{ env.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_OUTPUT
+          echo "aws-session-token=${{ env.AWS_SESSION_TOKEN }}" >> $GITHUB_OUTPUT
