@@ -55,10 +55,31 @@
 .desc .title {
     font-weight: 600;
     margin-bottom: 4px;
+    width: 170px;
+}
+
+.group-items .desc .title {
+    width: calc(180px - 30px);
+}
+
+.fixed .timer {
+    position: fixed;
+    width: 99vw;
+    background: #fff;
+    height: 70px;
+    left: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 10px;
+
+}
+
+.fixed .workout-card {
+    padding: 12px 20px 70px;
 }
 
 .kg {
-    width: 140px;
+    width: 100px;
 }
 
 .group {
@@ -87,6 +108,7 @@
     margin-top: 6px;
 }
 
+.carga,
 .timer {
     display: grid;
     grid-template-columns: 1fr auto;
