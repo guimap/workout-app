@@ -141,7 +141,7 @@ export class WorkoutComponent {
     }
 
     reset() {
-        this.workoutSeconds = 0;
+        this.startTime = Date.now();
     }
 
     getWorkouts() {
