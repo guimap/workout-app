@@ -15,6 +15,7 @@
 
             <!-- Timer -->
             <section class="section timer">
+                <mat-progress-bar mode="determinate" [value]="progress()"></mat-progress-bar>
                 <div>
                     <h2 class="section-title">Tempo de treino</h2>
                     <div class="time">{{ timeLeft$ | async }}</div>
@@ -91,11 +92,11 @@
                 </div>
             </section>
             <!-- Progresso -->
-            <section class="section">
+            <!-- <section class="section">
                 <h2 class="section-title">Progresso</h2>
                 <mat-progress-bar mode="determinate" [value]="progress()"></mat-progress-bar>
                 <small class="progress-label">{{ progress() }}% concluído</small>
-            </section>
+            </section> -->
 
             <mat-divider></mat-divider>
 

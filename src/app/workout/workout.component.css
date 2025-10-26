@@ -74,6 +74,14 @@
 
 }
 
+.fixed .timer mat-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding-top: 5px;
+}
+
 .fixed .workout-card {
     padding: 12px 20px 70px;
 }
