@@ -47,5 +47,5 @@ jobs:
       env:
         PATHS: "/*"
         AWS_REGION: 'us-east-1'
-        DISTRIBUTION: $CLOUDFRONT_ID
+        DISTRIBUTION: ${{ env.CLOUDFRONT_ID }}
     
