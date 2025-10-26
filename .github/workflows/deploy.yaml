@@ -18,6 +18,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ needs.assume-oidc.outputs.aws-access-key-id }}
       AWS_SECRET_ACCESS_KEY: ${{ needs.assume-oidc.outputs.aws-secret-access-key }}
       AWS_SESSION_TOKEN: ${{ needs.assume-oidc.outputs.aws-session-token }}
+      CLOUDFRONT_ID: EP8T3JBQQ41HE
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -38,9 +39,11 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::104538124807:role/GitHubAction-FrontWorkoutApp
         aws-region: us-east-1
-    - name: Debug AWS credentials
-      run: env | grep AWS
     - name: Upload to S3
       run: |
         aws s3 sync ./dist s3://front-workout-app/ --delete
+    - name: Invalidate Cache
+      run: |
+        echo "Limpando o cloudfront $CLOUDFRONT_ID"
+        aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths /*
     
