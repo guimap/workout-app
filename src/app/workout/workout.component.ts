@@ -46,6 +46,8 @@ export class WorkoutComponent {
     public timerPaused: boolean = false;
     public timerStarted: boolean = false;
 
+    public startTime!: number;
+
     // id do dia: /treino/:id (ex.: uokfxwo, b0kxidu, ev9v0u9)
     id = computed(() => (this.route.snapshot.paramMap.get('id') ?? '').toLowerCase());
 
@@ -105,7 +107,15 @@ export class WorkoutComponent {
         return exercises as Exercise[];
     }
 
+    getElapsed() {
+        const now = Date.now();
+        const elapsed = Math.floor((now - this.startTime) / 1000); // segundos
+        console.log(`Tempo decorrido: ${elapsed}s`);
+        return elapsed;
+    }
+
     start() {
+        this.startTime = Date.now();
         this.running = true;
         if (!this.timerStarted) {
             this.timerStarted = true;
@@ -115,9 +125,9 @@ export class WorkoutComponent {
                     if (!this.running) {
                         // Silence is gold
                     } else {
-                        this.workoutSeconds += 1;
+
                     }
-                    return this.formatSecondsToHHMMSS(this.workoutSeconds);
+                    return this.formatSecondsToHHMMSS(this.getElapsed());
                 }),
                 shareReplay(1)
             );
@@ -131,7 +141,7 @@ export class WorkoutComponent {
     }
 
     reset() {
-        this.workoutSeconds = 0;
+        this.startTime = Date.now();
     }
 
     getWorkouts() {

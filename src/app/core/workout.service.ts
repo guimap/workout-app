@@ -7,7 +7,7 @@ import { R } from '@angular/cdk/keycodes';
 @Injectable({ providedIn: 'root' })
 export class WorkoutsService {
     private http = inject(HttpClient);
-    private readonly URL = 'https://treino-json.s3.us-east-1.amazonaws.com/processed/treino.json';
+    private readonly URL = 'https://d3fgovm6dm6a55.cloudfront.net/treino.json';
 
     private store = signal<Workout[]>([]);
     list = this.store.asReadonly();

@@ -1,4 +1,4 @@
-<mat-card *ngFor="let w of svc.list()" class="workout">
+<mat-card *ngFor="let w of svc.list()" class="workout" [routerLink]="['/treino', w.id]">
     <div class="card-head">
         <h2>{{ w.title }}</h2>
         <div class="actions">
