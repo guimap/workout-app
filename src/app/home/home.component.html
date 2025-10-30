@@ -6,6 +6,9 @@
             <button mat-icon-button (click)="remove(w.id)"><mat-icon>delete</mat-icon></button>
         </div>
     </div>
+    <div>
+        <h2 class="section-title">{{w.id}}</h2>
+    </div>
     <mat-chip-set>
         <mat-chip appearance="outlined">Exercícios: {{ w.exercises.length }}</mat-chip>
         <mat-chip appearance="outlined">ID: {{ w.id }}</mat-chip>
