@@ -67,16 +67,16 @@ describe('HomeComponent', () => {
   });
 
   it('should filter workouts by query text (case insensitive)', () => {
-    const initial = TestBed.createComponent(HomeComponent).componentInstance;
-    expect(initial.filtered().length).toBe(service.list().length);
+    const fixture = TestBed.createComponent(HomeComponent);
+    const component = fixture.componentInstance;
 
-    const withQuery = TestBed.createComponent(HomeComponent).componentInstance;
-    withQuery.query = 'treino b';
-    expect(withQuery.filtered().map(w => w.id)).toEqual(['B']);
+    expect(component.filtered().length).toBe(service.list().length);
 
-    const withWhitespace = TestBed.createComponent(HomeComponent).componentInstance;
-    withWhitespace.query = '   ';
-    expect(withWhitespace.filtered().length).toBe(service.list().length);
+    component.query = 'treino b';
+    expect(component.filtered().map(w => w.id)).toEqual(['B']);
+
+    component.query = '   ';
+    expect(component.filtered().length).toBe(service.list().length);
   });
 
   it('should calculate progress for nested workout structures', () => {

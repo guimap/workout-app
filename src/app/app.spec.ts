@@ -21,24 +21,21 @@ describe('AppComponent', () => {
   it('should render the toolbar brand linking to the home route', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const brandDebug = fixture.debugElement.query(By.css('mat-toolbar a.brand'));
-    const brandLink = brandDebug?.nativeElement as HTMLAnchorElement | null;
-    const routerLink = brandDebug?.injector.get(RouterLink, null) as (RouterLink & { commands?: unknown[] }) | null;
+    const compiled = fixture.nativeElement as HTMLElement;
+    const brandLink = compiled.querySelector('mat-toolbar a.brand');
 
     expect(brandLink).not.toBeNull();
-    expect(routerLink?.commands).toEqual(['/']);
+    expect(brandLink?.getAttribute('ng-reflect-router-link')).toBe('/');
     expect(brandLink?.textContent?.trim()).toBe('Treinos');
   });
 
   it('should render the navigation button to the home page', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const homeDebug = fixture.debugElement.query(By.css('a[mat-button]'));
-    const homeButton = homeDebug?.nativeElement as HTMLAnchorElement | null;
-    const routerLink = homeDebug?.injector.get(RouterLink, null) as (RouterLink & { commands?: unknown[] }) | null;
+    const compiled = fixture.nativeElement as HTMLElement;
+    const homeButton = compiled.querySelector('a[mat-button][routerLink="/"]');
 
     expect(homeButton).not.toBeNull();
-    expect(routerLink?.commands).toEqual(['/']);
     expect(homeButton?.textContent?.trim()).toBe('Início');
   });
 });
