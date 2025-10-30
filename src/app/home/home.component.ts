@@ -47,11 +47,14 @@ export class HomeComponent {
     trackById = (_: number, w: { id: string }) => w.id;
 
     progressOf(exs: { done?: boolean }[] | { done?: boolean }[][] = []) {
-        //  if exists some matrix into list, then flat into unique list
-
         if (!exs.length) return 0;
-        const done = exs.flat().filter(e => e.done).length;
-        return Math.round((done / exs.length) * 100);
+
+        const flattened = (exs as any[]).flat ? (exs as any[]).flat(Infinity) : exs;
+        const total = flattened.length;
+        if (!total) return 0;
+
+        const done = flattened.filter((e: { done?: boolean }) => e?.done).length;
+        return Math.round((done / total) * 100);
     }
 
     addWorkout() {
