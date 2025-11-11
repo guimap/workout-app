@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { Exercise, Workout } from '../core/workout.model';
 import { interval, map, Observable, shareReplay } from 'rxjs';
 import { E, T } from '@angular/cdk/keycodes';
+import { WorkoutsRepository } from '../core/workout.repository';
 
 type Ex = { description: string; series: string; done?: boolean; kg?: number | null };
 type Item = Ex | Ex[]; // simples ou grupo
@@ -36,10 +37,11 @@ type Day = { id: string; exercices: Item[] };
     templateUrl: './workout.component.html',
     styleUrls: ['./workout.component.css']
 })
-export class WorkoutComponent {
+export class WorkoutComponent implements OnInit {
     private route = inject(ActivatedRoute);
     public running: boolean = false;
     svc = inject(WorkoutsService);
+    private repository: WorkoutsRepository = inject(WorkoutsRepository);
 
     public workoutSeconds: number = 0;
     public timeLeft$: Observable<string> = new Observable<string>();
@@ -48,19 +50,35 @@ export class WorkoutComponent {
 
     public startTime!: number;
 
+    private workout = signal<Workout | null>(null);
+
+    async ngOnInit() {
+
+        const workout = await this.repository.get(this.id());
+        this.workout.set(workout);
+        console.log({ workout })
+    }
+
     // id do dia: /treino/:id (ex.: uokfxwo, b0kxidu, ev9v0u9)
     id = computed(() => (this.route.snapshot.paramMap.get('id') ?? '').toLowerCase());
+
+
 
     // dia atual a partir do service
     day = computed<Workout | null>(() => {
         const d = this.svc.getDayById(this.id());
         //  Verifica se possui estado no localstorage
         const id = d?.id || '';
-        const localState = sessionStorage.getItem(id);
-        if (localState) {
+        // console.log('a sadas')
+        // const workout = await this.repository.get()
+        // const localState = sessionStorage.getItem(id);
+
+        const storedWorkout = this.workout();
+        console.log("carregando do storage", storedWorkout)
+        if (storedWorkout) {
             // console.log(JSON.parse(localState) as Exercise[] | Exercise[][])
-            const workout = localState ? JSON.parse(localState) : {};
-            return { exercises: workout } as Workout;
+            // const workout = localState ? JSON.parse(localState) : {};
+            return storedWorkout;
             // return workout;
         } else {
 
@@ -162,20 +180,12 @@ export class WorkoutComponent {
     /**
      * @desc salva a carga de cada exercicio
      */
-    saveKg() {
-        const state = JSON.stringify(this.day()?.exercises);
-        const cloned = JSON.parse(state) as Exercise[] | Exercise[][];
-        for (const it of cloned) {
-            if (Array.isArray(it)) {
-                for (const sub of it) {
-                    sub.done = false;
-                }
-            } else {
-                it.done = false;
-            }
+    async saveKg() {
+        const exercice = this.day()?.exercises;
+        if (exercice) {
+            await this.repository.save(this.day()!.id, exercice);
+            alert("Carga salva com sucesso!")
         }
-        console.log(cloned)
-        sessionStorage.setItem(this.day()!.id, JSON.stringify(cloned));
     }
 
 
