@@ -1,0 +1,100 @@
+{
+    "days": [
+        {
+            "id": "treino_novembro_treino_a",
+            "name": "Treino A",
+            "exercices": [
+                {
+                    "description": "Supino barra drop",
+                    "series": "3x6a8+8a12"
+                },
+                {
+                    "description": "Supino inclinado halteres",
+                    "series": "3x10+15"
+                },
+                [
+                    {
+                        "description": "Supino máquina",
+                        "series": "3x20"
+                    },
+                    {
+                        "description": "elevação frontal",
+                        "series": "3x10"
+                    }
+                ],
+                {
+                    "description": "Desenvolvimento halteres",
+                    "series": "3x8a12"
+                },
+                {
+                    "description": "Tríceps corda",
+                    "series": "3xF"
+                },
+                [
+                    {
+                        "description": "Tríceps testa",
+                        "series": "3x15"
+                    },
+                    {
+                        "description": "banco",
+                        "series": "3x15"
+                    }
+                ]
+            ]
+        },
+        {
+            "id": "treino_novembro_treino_b",
+            "name": "Treino B",
+            "exercices": [
+                {
+                    "description": "Puxada costa barra romana",
+                    "series": "3x8a10+15a20"
+                },
+                {
+                    "description": "Barra romana costas",
+                    "series": "3x8a10+15a20"
+                },
+                {
+                    "description": "Elevação curvada mais encolhimento",
+                    "series": "3x15+20"
+                },
+                {
+                    "description": "Rosca direta drop",
+                    "series": "3x15+10"
+                },
+                {
+                    "description": "Martelo drop",
+                    "series": "3x15+15"
+                }
+            ]
+        },
+        {
+            "id": "treino_novembro_treino_c",
+            "name": "Treino C",
+            "exercices": [
+                {
+                    "description": "Agachamento livre",
+                    "series": "3x15"
+                },
+                [
+                    {
+                        "description": "Terra",
+                        "series": "3x20"
+                    },
+                    {
+                        "description": "sumor",
+                        "series": "3x20"
+                    }
+                ],
+                {
+                    "description": "Cadeira flexora Drop",
+                    "series": "3x20+20"
+                },
+                {
+                    "description": "Cadeira abdutora",
+                    "series": "3x20+30"
+                }
+            ]
+        }
+    ]
+}

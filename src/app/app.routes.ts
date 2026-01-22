@@ -1,9 +1,18 @@
-import { Routes } from "@angular/router";
-import { HomeComponent } from "./home/home.component";
-import { WorkoutComponent } from "./workout/workout.component";
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent, title: 'Meus Treinos' },
-    { path: 'treino/:id', component: WorkoutComponent, title: 'Treino' },
-    { path: '**', redirectTo: '' }
+    {
+        path: '',
+        loadComponent: () => import('./components/workout-list/workout-list.component')
+            .then(m => m.WorkoutListComponent)
+    },
+    {
+        path: 'workout/:id',
+        loadComponent: () => import('./components/workout-detail/workout-detail.component')
+            .then(m => m.WorkoutDetailComponent)
+    },
+    {
+        path: '**',
+        redirectTo: ''
+    }
 ];
