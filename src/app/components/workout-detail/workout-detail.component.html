@@ -1,0 +1,142 @@
+<div class="container animate-fadeIn">
+    <!-- Header -->
+    <header class="header">
+        <button class="btn-back" (click)="goBack()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            <span>Voltar</span>
+        </button>
+
+        <div class="header-info">
+            <h1>{{ workout()?.name }}</h1>
+            <p class="text-muted">{{ completedCount() }} de {{ totalExercises() }} exercícios</p>
+        </div>
+
+        @if (isWorkoutActive()) {
+        <div class="timer-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span>{{ formattedTimer() }}</span>
+        </div>
+        }
+    </header>
+
+    <!-- Exercise List -->
+    @if (workout()) {
+    <div class="exercise-list">
+        @for (item of workout()!.exercices; track $index) {
+        <!-- Check if it's a group (bi-set, tri-set, etc.) -->
+        @if (isGroup(item)) {
+        <div class="exercise-group">
+            <div class="group-badge badge badge-primary">
+                {{ getGroupLabel(item) }}
+            </div>
+            <div class="group-exercises">
+                @for (exercise of item; track exercise.description) {
+                <ng-container
+                    *ngTemplateOutlet="exerciseCard; context: { exercise: exercise, isGrouped: true }"></ng-container>
+                }
+            </div>
+        </div>
+        } @else {
+        <ng-container *ngTemplateOutlet="exerciseCard; context: { exercise: item, isGrouped: false }"></ng-container>
+        }
+
+        <!-- Separator dot -->
+        @if ($index < workout()!.exercices.length - 1) { <div class="separator">
+            <span class="separator-dot"></span>
+    </div>
+    }
+    }
+</div>
+}
+
+<!-- Fixed Bottom Button -->
+<div class="fixed-bottom">
+    @if (!isWorkoutActive()) {
+    <button class="btn btn-primary w-full start-btn" (click)="startWorkout()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <polygon points="5,3 19,12 5,21" fill="currentColor" />
+        </svg>
+        <span>Iniciar Treino</span>
+    </button>
+    } @else {
+    <button class="btn btn-destructive w-full finish-btn" (click)="finishWorkout()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="16" height="16" rx="2" fill="currentColor" />
+        </svg>
+        <span>Finalizar Treino</span>
+    </button>
+    }
+</div>
+</div>
+
+<!-- Exercise Card Template -->
+<ng-template #exerciseCard let-exercise="exercise" let-isGrouped="isGrouped">
+    <div class="exercise-card card" [class.card-active]="isWorkoutActive() && isCompleted(exercise)"
+        [class.grouped]="isGrouped">
+        <div class="exercise-info">
+            <h3 class="exercise-name">{{ exercise.description }}</h3>
+            <p class="exercise-series text-muted">{{ exercise.series }}</p>
+        </div>
+
+        <!-- Multi-weight section for exercises with + pattern -->
+        @if (hasSets(exercise)) {
+        <div class="exercise-weights-multi">
+            @for (set of getSets(exercise); track $index; let i = $index) {
+            @if (!set.isFailure) {
+            <div class="weight-set">
+                <span class="weight-label text-muted">{{ set.label }}</span>
+                @if (isEditing(exercise.description, i)) {
+                <input type="number" class="weight-input weight-input-small"
+                    [value]="getWeightForSet(exercise, i) || ''" placeholder="kg"
+                    (blur)="saveWeight(exercise, i, $event)" (keyup.enter)="saveWeight(exercise, i, $event)"
+                    (keyup.escape)="cancelEdit()" autofocus />
+                } @else {
+                <button class="weight-value weight-value-small" (click)="startEditWeight(exercise.description, i)"
+                    [class.has-value]="getWeightForSet(exercise, i)">
+                    <span>{{ getWeightDisplay(exercise, i) }}</span>
+                    <span class="weight-unit" *ngIf="getWeightForSet(exercise, i)">kg</span>
+                </button>
+                }
+            </div>
+            @if (i < getSets(exercise).length - 1 && !getSets(exercise)[i + 1].isFailure) { <span
+                class="weight-separator">×</span>
+                }
+                }
+                }
+        </div>
+        } @else {
+        <!-- Single weight section -->
+        <div class="exercise-weight">
+            <span class="weight-label text-muted">Carga</span>
+            @if (isEditing(exercise.description, 0)) {
+            <input type="number" class="weight-input" [value]="getWeightForSet(exercise, 0) || ''" placeholder="kg"
+                (blur)="saveWeight(exercise, 0, $event)" (keyup.enter)="saveWeight(exercise, 0, $event)"
+                (keyup.escape)="cancelEdit()" autofocus />
+            } @else {
+            <button class="weight-value" (click)="startEditWeight(exercise.description, 0)"
+                [class.has-value]="getWeightForSet(exercise, 0)">
+                <span>{{ getWeightDisplay(exercise, 0) }}</span>
+                <span class="weight-unit" *ngIf="getWeightForSet(exercise, 0)">kg</span>
+            </button>
+            }
+        </div>
+        }
+
+        @if (isWorkoutActive()) {
+        <button class="complete-toggle" [class.completed]="isCompleted(exercise)" (click)="toggleExercise(exercise)">
+            @if (isCompleted(exercise)) {
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            }
+        </button>
+        }
+    </div>
+</ng-template>
