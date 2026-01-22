@@ -12,6 +12,9 @@
         <div class="header-info">
             <h1>{{ workout()?.name }}</h1>
             <p class="text-muted">{{ completedCount() }} de {{ totalExercises() }} exercícios</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" [style.width.%]="progressPercentage()"></div>
+            </div>
         </div>
 
         @if (isWorkoutActive()) {
@@ -79,6 +82,19 @@
 <ng-template #exerciseCard let-exercise="exercise" let-isGrouped="isGrouped">
     <div class="exercise-card card" [class.card-active]="isWorkoutActive() && isCompleted(exercise)"
         [class.grouped]="isGrouped">
+
+        <!-- Checkbox (Left) -->
+        @if (isWorkoutActive()) {
+        <button class="checkbox-toggle" [class.completed]="isCompleted(exercise)" (click)="toggleExercise(exercise)">
+            @if (isCompleted(exercise)) {
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+            }
+        </button>
+        }
+
         <div class="exercise-info">
             <h3 class="exercise-name">{{ exercise.description }}</h3>
             <p class="exercise-series text-muted">{{ exercise.series }}</p>
@@ -91,17 +107,25 @@
             @if (!set.isFailure) {
             <div class="weight-set">
                 <span class="weight-label text-muted">{{ set.label }}</span>
-                @if (isEditing(exercise.description, i)) {
-                <input type="number" class="weight-input weight-input-small"
-                    [value]="getWeightForSet(exercise, i) || ''" placeholder="kg"
-                    (blur)="saveWeight(exercise, i, $event)" (keyup.enter)="saveWeight(exercise, i, $event)"
-                    (keyup.escape)="cancelEdit()" autofocus />
-                } @else {
+                
                 <button class="weight-value weight-value-small" (click)="startEditWeight(exercise.description, i)"
-                    [class.has-value]="getWeightForSet(exercise, i)">
+                    [class.has-value]="getWeightForSet(exercise, i)"
+                    [style.visibility]="isEditing(exercise.description, i) ? 'hidden' : 'visible'">
                     <span>{{ getWeightDisplay(exercise, i) }}</span>
                     <span class="weight-unit" *ngIf="getWeightForSet(exercise, i)">kg</span>
                 </button>
+
+                @if (isEditing(exercise.description, i)) {
+                <div class="edit-weight-container">
+                    <input #weightInput type="number" class="weight-input weight-input-small"
+                        [value]="getWeightForSet(exercise, i) || ''" placeholder="kg"
+                        (keyup.enter)="saveWeight(exercise, i, weightInput.value)" (keyup.escape)="cancelEdit()"
+                        autofocus />
+                    <div class="edit-actions">
+                        <button class="btn-cancel" (click)="cancelEdit()">Cancelar</button>
+                        <button class="btn-save" (click)="saveWeight(exercise, i, weightInput.value)">Salvar</button>
+                    </div>
+                </div>
                 }
             </div>
             @if (i < getSets(exercise).length - 1 && !getSets(exercise)[i + 1].isFailure) { <span
@@ -114,29 +138,27 @@
         <!-- Single weight section -->
         <div class="exercise-weight">
             <span class="weight-label text-muted">Carga</span>
-            @if (isEditing(exercise.description, 0)) {
-            <input type="number" class="weight-input" [value]="getWeightForSet(exercise, 0) || ''" placeholder="kg"
-                (blur)="saveWeight(exercise, 0, $event)" (keyup.enter)="saveWeight(exercise, 0, $event)"
-                (keyup.escape)="cancelEdit()" autofocus />
-            } @else {
+            
             <button class="weight-value" (click)="startEditWeight(exercise.description, 0)"
-                [class.has-value]="getWeightForSet(exercise, 0)">
+                [class.has-value]="getWeightForSet(exercise, 0)"
+                [style.visibility]="isEditing(exercise.description, 0) ? 'hidden' : 'visible'">
                 <span>{{ getWeightDisplay(exercise, 0) }}</span>
                 <span class="weight-unit" *ngIf="getWeightForSet(exercise, 0)">kg</span>
             </button>
+
+            @if (isEditing(exercise.description, 0)) {
+            <div class="edit-weight-container">
+                <input #weightInputWrapper type="number" class="weight-input"
+                    [value]="getWeightForSet(exercise, 0) || ''" placeholder="kg"
+                    (keyup.enter)="saveWeight(exercise, 0, weightInputWrapper.value)" (keyup.escape)="cancelEdit()"
+                    autofocus />
+                <div class="edit-actions">
+                    <button class="btn-cancel" (click)="cancelEdit()">Cancelar</button>
+                    <button class="btn-save" (click)="saveWeight(exercise, 0, weightInputWrapper.value)">Salvar</button>
+                </div>
+            </div>
             }
         </div>
-        }
-
-        @if (isWorkoutActive()) {
-        <button class="complete-toggle" [class.completed]="isCompleted(exercise)" (click)="toggleExercise(exercise)">
-            @if (isCompleted(exercise)) {
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                    stroke-linejoin="round" />
-            </svg>
-            }
-        </button>
         }
     </div>
 </ng-template>

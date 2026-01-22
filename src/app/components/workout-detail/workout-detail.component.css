@@ -58,6 +58,22 @@
 }
 
 /* Exercise List */
+.progress-bar-container {
+    height: 2px;
+    background-color: var(--border);
+    width: 100%;
+    margin-top: var(--spacing-sm);
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
 .exercise-list {
     display: flex;
     flex-direction: column;
@@ -223,30 +239,105 @@
     /* Align with weight values */
 }
 
-/* Complete Toggle */
-.complete-toggle {
+/* Checkbox Toggle */
+.checkbox-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    /* Ensure it doesn't shrink */
+    min-height: 24px;
+    padding: 0;
+    margin: 0;
+    margin-right: var(--spacing-sm);
+    border-radius: 6px;
+    /* Square with rounded corners */
+    border: 2px solid var(--muted-foreground);
     background: transparent;
-    color: var(--primary);
+    color: transparent;
     cursor: pointer;
     transition: all var(--transition-fast);
-    flex-shrink: 0;
+    flex: 0 0 24px;
+    /* Fix size in flex container */
+    align-self: center;
+    /* Prevent stretching */
 }
 
-.complete-toggle:hover {
-    border-color: var(--primary);
+.checkbox-toggle svg {
+    width: 14px;
+    height: 14px;
 }
 
-.complete-toggle.completed {
+.checkbox-toggle:hover {
+    border-color: var(--foreground);
+}
+
+.checkbox-toggle.completed {
     background-color: var(--primary);
     border-color: var(--primary);
     color: var(--primary-foreground);
+}
+
+/* Edit Weight UI */
+.edit-weight-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    background-color: var(--card);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    min-width: 180px;
+}
+
+.edit-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+}
+
+.btn-save,
+.btn-cancel {
+    flex: 1;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 6px;
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.btn-save {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.btn-cancel {
+    background-color: transparent;
+    color: var(--muted-foreground);
+}
+
+.btn-save:hover,
+.btn-cancel:hover {
+    opacity: 0.8;
+}
+
+/* Ensure exercise card has relative positioning for the edit popup */
+.exercise-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
 }
 
 /* Fixed Bottom */
