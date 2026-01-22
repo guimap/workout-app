@@ -68,6 +68,12 @@ export class WorkoutDetailComponent implements OnInit, OnDestroy {
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     });
 
+    progressPercentage = computed(() => {
+        const total = this.totalExercises();
+        if (total === 0) return 0;
+        return (this.completedCount() / total) * 100;
+    });
+
     ngOnInit(): void {
         const id = this.route.snapshot.paramMap.get('id');
         if (!id) {
@@ -123,9 +129,8 @@ export class WorkoutDetailComponent implements OnInit, OnDestroy {
         this.editingExercise.set(`${exerciseDescription}-${setIndex}`);
     }
 
-    saveWeight(exercise: Exercise, setIndex: number, event: Event): void {
-        const input = event.target as HTMLInputElement;
-        const weight = parseFloat(input.value);
+    saveWeight(exercise: Exercise, setIndex: number, value: string): void {
+        const weight = parseFloat(value);
 
         if (!isNaN(weight) && weight >= 0) {
             const w = this.workout();
