@@ -40,3 +40,13 @@
 
 ## Conclusão
 O aplicativo demonstra robustez nas funcionalidades principais de acompanhamento de treino. A persistência de dados via `localStorage` funciona adequadamente para criação e atualização de cargas, e a interface reage corretamente às interações de conclusão de exercícios.
+
+### 4. Limpar Dados Locais (Home)
+**Objetivo:** Verificar a funcionalidade do botão flutuante para limpar o `localStorage`.
+- **Ação:**
+  1. Navegar para a tela inicial.
+  2. Clicar no botão flutuante (FAB) no canto inferior esquerdo.
+  3. Confirmar a ação no modal.
+- **Resultado Esperado:**
+  1. O modal deve abrir ao clicar no FAB.
+  2. Ao confirmar, a página deve recarregar e os dados salvos (pesos e conclusões) devem ser resetados.

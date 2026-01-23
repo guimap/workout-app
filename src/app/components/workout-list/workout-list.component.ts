@@ -29,4 +29,20 @@ export class WorkoutListComponent implements OnInit {
     getWorkoutLetter(index: number): string {
         return String.fromCharCode(65 + index); // A, B, C, etc.
     }
+
+    // Modal Logic
+    showModal = false;
+
+    openClearStorageModal(): void {
+        this.showModal = true;
+    }
+
+    closeClearStorageModal(): void {
+        this.showModal = false;
+    }
+
+    confirmClearStorage(): void {
+        localStorage.clear();
+        window.location.reload();
+    }
 }
