@@ -1,0 +1,82 @@
+<div class="container animate-fadeIn">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-title">
+            <!-- Dumbbell/Weight Icon (Diagonal) -->
+            <svg class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g transform="rotate(-45 12 12)">
+                    <path d="M6 7V17M18 7V17" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                    <path d="M4 9V15M20 9V15" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                    <path d="M6 12H18" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+                </g>
+            </svg>
+            <h1>Meus Treinos</h1>
+        </div>
+        <p class="text-muted subtitle">Selecione um treino para começar</p>
+    </header>
+
+    <!-- Loading State -->
+    @if (loading()) {
+    <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p class="text-muted">Carregando treinos...</p>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (error()) {
+    <div class="error-container">
+        <p class="error-message">{{ error() }}</p>
+        <button class="btn btn-primary" (click)="ngOnInit()">
+            Tentar novamente
+        </button>
+    </div>
+    }
+
+    <!-- Workout List -->
+    @if (!loading() && !error()) {
+    <div class="workout-list">
+        @for (workout of workouts(); track workout.id; let i = $index) {
+        <a [routerLink]="['/workout', workout.id]" class="workout-card card animate-slideUp"
+            [style.animation-delay]="(i * 50) + 'ms'">
+            <div class="workout-badge">
+                <span>{{ getWorkoutLetter(i) }}</span>
+            </div>
+            <div class="workout-info">
+                <h2 class="workout-name">{{ workout.name }}</h2>
+                <p class="workout-exercises text-muted">{{ getExerciseCount(workout) }} exercícios</p>
+            </div>
+            <div class="workout-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </div>
+        </a>
+        }
+    </div>
+    }
+
+    <!-- Clear Storage FAB -->
+    <button class="fab-clear" (click)="openClearStorageModal()" aria-label="Limpar dados locais">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18" />
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        </svg>
+    </button>
+
+    <!-- Clear Storage Modal -->
+    @if (showModal) {
+    <div class="modal-overlay animate-fadeIn" (click)="closeClearStorageModal()">
+        <div class="modal-content animate-slideUp" (click)="$event.stopPropagation()">
+            <h3>Limpar Dados</h3>
+            <p class="text-muted">Tem certeza? Isso apagará todos os dados salvos localmente.</p>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" (click)="closeClearStorageModal()">Cancelar</button>
+                <button class="btn btn-destructive" (click)="confirmClearStorage()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    }
+</div>

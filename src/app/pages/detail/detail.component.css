@@ -1,0 +1,350 @@
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+
+    /* Sticky header */
+    position: sticky;
+    top: 0;
+    background-color: var(--background);
+    padding-top: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    z-index: 100;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: transparent;
+    border: none;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: var(--spacing-xs) 0;
+    transition: color var(--transition-fast);
+}
+
+.btn-back:hover {
+    color: var(--foreground);
+}
+
+.header-info {
+    flex: 1;
+}
+
+.header-info h1 {
+    margin-bottom: 2px;
+}
+
+.header-info p {
+    font-size: 0.875rem;
+}
+
+.timer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background-color: rgba(160, 240, 60, 0.15);
+    border: 1px solid var(--primary);
+    border-radius: var(--radius);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    color: var(--primary);
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-medium);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Exercise List */
+.progress-bar-container {
+    height: 2px;
+    background-color: var(--border);
+    width: 100%;
+    margin-top: var(--spacing-sm);
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding-bottom: 100px;
+}
+
+.separator {
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-sm) 0;
+}
+
+.separator-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--muted-foreground);
+}
+
+/* Exercise Group (Bi-set, Tri-set) */
+.exercise-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.group-badge {
+    align-self: flex-start;
+    margin-bottom: var(--spacing-xs);
+}
+
+.group-exercises {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.group-exercises .exercise-card {
+    border-left: 2px solid var(--primary);
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* Exercise Card */
+.exercise-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+}
+
+.exercise-card.grouped {
+    background-color: rgba(30, 30, 30, 0.8);
+}
+
+.exercise-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.exercise-name {
+    font-size: 1rem;
+    font-weight: var(--font-weight-medium);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.exercise-series {
+    font-size: 0.875rem;
+}
+
+/* Weight */
+.exercise-weight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 60px;
+}
+
+.weight-label {
+    font-size: 0.75rem;
+}
+
+.weight-value {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    background: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    color: var(--muted-foreground);
+    font-size: 1rem;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-width: 50px;
+    justify-content: center;
+}
+
+.weight-value:hover {
+    border-color: var(--primary);
+}
+
+.weight-value:focus {
+    outline: none;
+    border-color: var(--ring);
+    box-shadow: 0 0 0 2px rgba(160, 240, 60, 0.2);
+}
+
+.weight-value.has-value {
+    color: var(--primary);
+    background-color: rgba(160, 240, 60, 0.1);
+    border-color: var(--primary);
+}
+
+.weight-unit {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+.weight-input {
+    width: 60px;
+    text-align: center;
+    padding: var(--spacing-xs);
+    font-size: 1rem;
+    font-weight: var(--font-weight-medium);
+}
+
+/* Multi-weight layout */
+.exercise-weights-multi {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.weight-set {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.weight-value-small {
+    min-width: 42px;
+    padding: var(--spacing-xs);
+    font-size: 0.875rem;
+}
+
+.weight-input-small {
+    width: 48px;
+    font-size: 0.875rem;
+}
+
+.weight-separator {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    margin-top: 14px;
+}
+
+/* Checkbox Toggle */
+.checkbox-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 0;
+    margin: 0;
+    margin-right: var(--spacing-sm);
+    border-radius: 6px;
+    border: 2px solid var(--muted-foreground);
+    background: transparent;
+    color: transparent;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    flex: 0 0 24px;
+    align-self: center;
+}
+
+.checkbox-toggle svg {
+    width: 14px;
+    height: 14px;
+}
+
+.checkbox-toggle:hover {
+    border-color: var(--foreground);
+}
+
+.checkbox-toggle.completed {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* Edit Weight UI */
+.edit-weight-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    background-color: var(--card);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    min-width: 180px;
+}
+
+.edit-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+}
+
+.btn-save,
+.btn-cancel {
+    flex: 1;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 6px;
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.btn-save {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.btn-cancel {
+    background-color: transparent;
+    color: var(--muted-foreground);
+}
+
+.btn-save:hover,
+.btn-cancel:hover {
+    opacity: 0.8;
+}
+
+/* Fixed Bottom */
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing-md);
+    background: linear-gradient(transparent, var(--background) 20%);
+    padding-top: var(--spacing-xl);
+}
+
+.start-btn,
+.finish-btn {
+    font-size: 1rem;
+    font-weight: var(--font-weight-medium);
+    padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.start-btn svg,
+.finish-btn svg {
+    flex-shrink: 0;
+}

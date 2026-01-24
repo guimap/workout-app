@@ -1,0 +1,27 @@
+<header class="header">
+    <button class="btn-back" (click)="onBack()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+        </svg>
+        <span>Voltar</span>
+    </button>
+
+    <div class="header-info">
+        <h1>{{ title }}</h1>
+        <p class="text-muted">{{ completedCount }} de {{ totalCount }} exercícios</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" [style.width.%]="progressPercentage"></div>
+        </div>
+    </div>
+
+    @if (showTimer) {
+    <div class="timer-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+            <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <span>{{ timer }}</span>
+    </div>
+    }
+</header>

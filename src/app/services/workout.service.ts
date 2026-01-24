@@ -1,52 +1,61 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap, map, catchError, of } from 'rxjs';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { Observable, tap, catchError, of } from 'rxjs';
 import {
     Workout,
-    WorkoutData,
     Exercise,
-    ExerciseItem,
     ActiveWorkoutState,
     isExerciseGroup
 } from '../models/workout.model';
+import { WorkoutHttpRepository } from '../repository/workout-http.repository';
+import { WorkoutStorageRepository } from '../repository/workout-storage.repository';
 
-const API_URL = 'https://d3fgovm6dm6a55.cloudfront.net/treino.json';
-const WEIGHTS_STORAGE_KEY = 'treino-app-weights';
-const ACTIVE_WORKOUT_KEY = 'treino-app-active-workout';
-
+/**
+ * Workout Service
+ * 
+ * Business logic layer for workout management.
+ * This service orchestrates data from repositories and manages application state.
+ * 
+ * Responsibilities:
+ * - Manage workout state (loading, error, data)
+ * - Coordinate between HTTP and Storage repositories
+ * - Handle workout session management (start, finish, toggles)
+ * - Apply saved weights to loaded workouts
+ */
 @Injectable({
     providedIn: 'root'
 })
 export class WorkoutService {
-    // Signals para estado reativo
+    private httpRepo = inject(WorkoutHttpRepository);
+    private storageRepo = inject(WorkoutStorageRepository);
+
+    // Signals for reactive state
     private workoutsSignal = signal<Workout[]>([]);
     private loadingSignal = signal<boolean>(false);
     private errorSignal = signal<string | null>(null);
     private activeWorkoutSignal = signal<ActiveWorkoutState | null>(null);
 
-    // Computed values
+    // Computed values (public API)
     readonly workouts = computed(() => this.workoutsSignal());
     readonly loading = computed(() => this.loadingSignal());
     readonly error = computed(() => this.errorSignal());
     readonly activeWorkout = computed(() => this.activeWorkoutSignal());
 
-    constructor(private http: HttpClient) {
+    constructor() {
         this.loadActiveWorkoutFromStorage();
     }
 
+    // ========== Data Loading ==========
+
     /**
-     * Carrega os treinos da API
+     * Load workouts from API and apply saved weights
      */
     loadWorkouts(): Observable<Workout[]> {
         this.loadingSignal.set(true);
         this.errorSignal.set(null);
 
-        return this.http.get<WorkoutData>(API_URL).pipe(
-            map(data => data.days),
+        return this.httpRepo.getWorkouts().pipe(
             tap(workouts => {
-                // Aplicar pesos salvos do localStorage
-                const savedWeights = this.getSavedWeights();
-                const workoutsWithWeights = this.applyWeights(workouts, savedWeights);
+                const workoutsWithWeights = this.applyStoredWeights(workouts);
                 this.workoutsSignal.set(workoutsWithWeights);
                 this.loadingSignal.set(false);
             }),
@@ -60,32 +69,127 @@ export class WorkoutService {
     }
 
     /**
-     * Retorna um treino pelo ID
+     * Get a workout by ID
      */
     getWorkoutById(id: string): Workout | undefined {
         return this.workoutsSignal().find(w => w.id === id);
     }
 
+    // ========== Weight Management ==========
+
     /**
-     * Salva o peso de um exercício (para exercícios com set único)
+     * Save weight for an exercise set
      */
     saveWeight(workoutId: string, exerciseDescription: string, weight: number, setIndex: number = 0): void {
-        const weights = this.getSavedWeights();
-        const key = `${workoutId}-${exerciseDescription}-${setIndex}`;
-        weights[key] = weight;
-        localStorage.setItem(WEIGHTS_STORAGE_KEY, JSON.stringify(weights));
+        // Persist to storage
+        this.storageRepo.saveWeight(workoutId, exerciseDescription, weight, setIndex);
 
-        // Atualizar o estado local
+        // Update in-memory state
         this.updateWorkoutWeight(workoutId, exerciseDescription, weight, setIndex);
     }
 
     /**
-     * Obtém o peso salvo para um set específico
+     * Get saved weight for an exercise set
      */
     getWeight(workoutId: string, exerciseDescription: string, setIndex: number = 0): number | undefined {
-        const weights = this.getSavedWeights();
-        const key = `${workoutId}-${exerciseDescription}-${setIndex}`;
-        return weights[key];
+        return this.storageRepo.getWeight(workoutId, exerciseDescription, setIndex);
+    }
+
+    // ========== Workout Session Management ==========
+
+    /**
+     * Start a workout session
+     */
+    startWorkout(workoutId: string): void {
+        const activeWorkout: ActiveWorkoutState = {
+            workoutId,
+            startTime: Date.now(),
+            elapsedSeconds: 0,
+            completedExercises: new Set()
+        };
+
+        this.activeWorkoutSignal.set(activeWorkout);
+        this.storageRepo.saveActiveWorkout(activeWorkout);
+    }
+
+    /**
+     * Update elapsed time for the active workout
+     */
+    updateElapsedTime(seconds: number): void {
+        const current = this.activeWorkoutSignal();
+        if (current) {
+            const updated = { ...current, elapsedSeconds: seconds };
+            this.activeWorkoutSignal.set(updated);
+        }
+    }
+
+    /**
+     * Toggle exercise completion status
+     */
+    toggleExerciseCompleted(exerciseDescription: string): void {
+        const current = this.activeWorkoutSignal();
+        if (!current) return;
+
+        const newCompleted = new Set(current.completedExercises);
+        if (newCompleted.has(exerciseDescription)) {
+            newCompleted.delete(exerciseDescription);
+        } else {
+            newCompleted.add(exerciseDescription);
+        }
+
+        const updated = { ...current, completedExercises: newCompleted };
+        this.activeWorkoutSignal.set(updated);
+        this.storageRepo.saveActiveWorkout(updated);
+    }
+
+    /**
+     * Check if an exercise is completed
+     */
+    isExerciseCompleted(exerciseDescription: string): boolean {
+        const current = this.activeWorkoutSignal();
+        return current?.completedExercises.has(exerciseDescription) ?? false;
+    }
+
+    /**
+     * Finish the active workout session
+     */
+    finishWorkout(): void {
+        this.activeWorkoutSignal.set(null);
+        this.storageRepo.clearActiveWorkout();
+    }
+
+    /**
+     * Check if a workout is currently active
+     */
+    isWorkoutActive(workoutId: string): boolean {
+        return this.activeWorkoutSignal()?.workoutId === workoutId;
+    }
+
+    // ========== Private Methods ==========
+
+    private loadActiveWorkoutFromStorage(): void {
+        const stored = this.storageRepo.getActiveWorkout();
+        if (stored) {
+            this.activeWorkoutSignal.set(stored);
+        }
+    }
+
+    private applyStoredWeights(workouts: Workout[]): Workout[] {
+        const weights = this.storageRepo.getWeights();
+
+        return workouts.map(workout => ({
+            ...workout,
+            exercices: workout.exercices.map(item => {
+                if (isExerciseGroup(item)) {
+                    return item.map(ex => {
+                        const key = `${workout.id}-${ex.description}-0`;
+                        return weights[key] ? { ...ex, weight: weights[key] } : ex;
+                    });
+                }
+                const key = `${workout.id}-${item.description}-0`;
+                return weights[key] ? { ...item, weight: weights[key] } : item;
+            })
+        }));
     }
 
     private updateWorkoutWeight(workoutId: string, exerciseDescription: string, weight: number, setIndex: number): void {
@@ -117,116 +221,5 @@ export class WorkoutService {
         });
 
         this.workoutsSignal.set(updatedWorkouts);
-    }
-
-    /**
-     * Inicia um treino
-     */
-    startWorkout(workoutId: string): void {
-        const activeWorkout: ActiveWorkoutState = {
-            workoutId,
-            startTime: Date.now(),
-            elapsedSeconds: 0,
-            completedExercises: new Set()
-        };
-
-        this.activeWorkoutSignal.set(activeWorkout);
-        this.saveActiveWorkoutToStorage(activeWorkout);
-    }
-
-    /**
-     * Atualiza o tempo decorrido do treino ativo
-     */
-    updateElapsedTime(seconds: number): void {
-        const current = this.activeWorkoutSignal();
-        if (current) {
-            const updated = { ...current, elapsedSeconds: seconds };
-            this.activeWorkoutSignal.set(updated);
-        }
-    }
-
-    /**
-     * Marca/desmarca um exercício como concluído
-     */
-    toggleExerciseCompleted(exerciseDescription: string): void {
-        const current = this.activeWorkoutSignal();
-        if (!current) return;
-
-        const newCompleted = new Set(current.completedExercises);
-        if (newCompleted.has(exerciseDescription)) {
-            newCompleted.delete(exerciseDescription);
-        } else {
-            newCompleted.add(exerciseDescription);
-        }
-
-        const updated = { ...current, completedExercises: newCompleted };
-        this.activeWorkoutSignal.set(updated);
-        this.saveActiveWorkoutToStorage(updated);
-    }
-
-    /**
-     * Verifica se um exercício está concluído
-     */
-    isExerciseCompleted(exerciseDescription: string): boolean {
-        const current = this.activeWorkoutSignal();
-        return current?.completedExercises.has(exerciseDescription) ?? false;
-    }
-
-    /**
-     * Finaliza o treino ativo
-     */
-    finishWorkout(): void {
-        this.activeWorkoutSignal.set(null);
-        localStorage.removeItem(ACTIVE_WORKOUT_KEY);
-    }
-
-    /**
-     * Verifica se há um treino ativo para o workout especificado
-     */
-    isWorkoutActive(workoutId: string): boolean {
-        return this.activeWorkoutSignal()?.workoutId === workoutId;
-    }
-
-    // ========== Métodos privados ==========
-
-    private getSavedWeights(): Record<string, number> {
-        const stored = localStorage.getItem(WEIGHTS_STORAGE_KEY);
-        return stored ? JSON.parse(stored) : {};
-    }
-
-    private applyWeights(workouts: Workout[], weights: Record<string, number>): Workout[] {
-        return workouts.map(workout => ({
-            ...workout,
-            exercices: workout.exercices.map(item => {
-                if (isExerciseGroup(item)) {
-                    return item.map(ex => {
-                        const key = `${workout.id}-${ex.description}`;
-                        return weights[key] ? { ...ex, weight: weights[key] } : ex;
-                    });
-                }
-                const key = `${workout.id}-${item.description}`;
-                return weights[key] ? { ...item, weight: weights[key] } : item;
-            })
-        }));
-    }
-
-    private saveActiveWorkoutToStorage(state: ActiveWorkoutState): void {
-        const serializable = {
-            ...state,
-            completedExercises: Array.from(state.completedExercises)
-        };
-        localStorage.setItem(ACTIVE_WORKOUT_KEY, JSON.stringify(serializable));
-    }
-
-    private loadActiveWorkoutFromStorage(): void {
-        const stored = localStorage.getItem(ACTIVE_WORKOUT_KEY);
-        if (stored) {
-            const parsed = JSON.parse(stored);
-            const state: ActiveWorkoutState = {
-                ...parsed,
-                completedExercises: new Set(parsed.completedExercises || [])
-            };
-            this.activeWorkoutSignal.set(state);
-        }
     }
 }
