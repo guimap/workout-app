@@ -1,0 +1,188 @@
+.header {
+    margin-bottom: var(--spacing-lg);
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.header-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--primary);
+}
+
+.header-title h1 {
+    color: var(--foreground);
+}
+
+.subtitle {
+    font-size: 0.875rem;
+}
+
+/* Loading */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    gap: var(--spacing-md);
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--secondary);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error */
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-xl);
+    gap: var(--spacing-md);
+    text-align: center;
+}
+
+.error-message {
+    color: var(--destructive);
+}
+
+/* Workout List */
+.workout-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.workout-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.workout-card:active {
+    transform: scale(0.98);
+}
+
+.workout-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background-color: rgba(160, 240, 60, 0.1);
+    border: 1px solid var(--primary);
+    border-radius: var(--radius);
+    color: var(--primary);
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-semibold);
+    flex-shrink: 0;
+}
+
+.workout-info {
+    flex: 1;
+}
+
+.workout-name {
+    color: var(--foreground);
+    font-size: 1.125rem;
+    margin-bottom: 2px;
+}
+
+.workout-exercises {
+    font-size: 0.875rem;
+}
+
+.workout-arrow {
+    color: var(--muted-foreground);
+    flex-shrink: 0;
+}
+
+/* FAB */
+.fab-clear {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: var(--destructive);
+    color: var(--foreground);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 50;
+    transition: all var(--transition-normal);
+}
+
+.fab-clear svg {
+    width: 32px;
+    height: 32px;
+}
+
+.fab-clear:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+
+.fab-clear:active {
+    transform: scale(0.95);
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: var(--spacing-md);
+}
+
+.modal-content {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--spacing-lg);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h3 {
+    margin: 0;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}

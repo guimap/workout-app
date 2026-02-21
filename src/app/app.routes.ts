@@ -3,13 +3,13 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
     {
         path: '',
-        loadComponent: () => import('./components/workout-list/workout-list.component')
-            .then(m => m.WorkoutListComponent)
+        loadComponent: () => import('./pages/home/home.component')
+            .then(m => m.HomeComponent)
     },
     {
         path: 'workout/:id',
-        loadComponent: () => import('./components/workout-detail/workout-detail.component')
-            .then(m => m.WorkoutDetailComponent)
+        loadComponent: () => import('./pages/detail/detail.component')
+            .then(m => m.DetailComponent)
     },
     {
         path: '**',

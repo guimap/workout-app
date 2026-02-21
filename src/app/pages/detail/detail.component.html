@@ -1,0 +1,59 @@
+<div class="container animate-fadeIn">
+    <!-- Header Component -->
+    <app-header [title]="workout()?.name || ''" [completedCount]="completedCount()" [totalCount]="totalExercises()"
+        [timer]="formattedTimer()" [showTimer]="isWorkoutActive()" [volume]="sessionVolumeDisplay()" (back)="goBack()">
+    </app-header>
+
+    <div class="workout-actions animate-fadeIn">
+        <button class="btn btn-secondary btn-sm" (click)="startManualRest()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Descanso 30s
+        </button>
+    </div>
+
+    <!-- Exercise List -->
+    @if (workout()) {
+    <div class="exercise-list">
+        @for (item of workout()!.exercices; track $index) {
+        <!-- Check if it's a group (bi-set, tri-set, etc.) -->
+        @if (isGroup(item)) {
+        <div class="exercise-group">
+            <div class="group-badge badge badge-primary">
+                {{ getGroupLabel(item) }}
+            </div>
+            <div class="group-exercises">
+                @for (exercise of item; track exercise.description) {
+                <app-exercise-item [exercise]="exercise" [isGrouped]="true" [isActive]="isWorkoutActive()"
+                    [isCompleted]="isCompleted(exercise)" [weights]="getWeightsForExercise(exercise)"
+                    (toggle)="toggleExercise(exercise)" (weightSave)="onWeightSave($event)">
+                </app-exercise-item>
+                }
+            </div>
+        </div>
+        } @else {
+        <app-exercise-item [exercise]="item" [isGrouped]="false" [isActive]="isWorkoutActive()"
+            [isCompleted]="isCompleted(item)" [weights]="getWeightsForExercise(item)" (toggle)="toggleExercise(item)"
+            (weightSave)="onWeightSave($event)">
+        </app-exercise-item>
+        }
+
+        <!-- Separator dot -->
+        @if ($index < workout()!.exercices.length - 1) { <div class="separator">
+            <span class="separator-dot"></span>
+    </div>
+    }
+    }
+</div>
+}
+
+<!-- Floating Rest Timer -->
+<app-rest-timer></app-rest-timer>
+
+<!-- Start/Finish Button Component -->
+<app-start-button [isActive]="isWorkoutActive()" (start)="startWorkout()" (finish)="finishWorkout()">
+</app-start-button>
+</div>
