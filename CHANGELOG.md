@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.2] - 2026-02-20
+
+### Fixed
+- **Personal Record Calculation:** Fixed a bug where saving a lower weight in a subsequent set would incorrectly override the session's overall maximum weight in the historical PR database. The `WorkoutStorageRepository` now intelligently computes the maximum weight dynamically across all sets for the given session to prevent false-positive PR badge states.
+
+---
+
 ## [2.0.1] - 2026-02-20
 
 ### Added

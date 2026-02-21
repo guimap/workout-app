@@ -70,6 +70,23 @@ export class WorkoutStorageRepository {
         return `${workoutId}-${exerciseDescription}-${setIndex}`;
     }
 
+    /**
+     * Get maximum weight for a specific exercise in a specific workout
+     */
+    getMaxWeightForExercise(workoutId: string, exerciseDescription: string): number {
+        const weights = this.getWeights();
+        let max = 0;
+        const prefix = `${workoutId}-${exerciseDescription}-`;
+        for (const key in weights) {
+            if (key.startsWith(prefix)) {
+                if (weights[key] > max) {
+                    max = weights[key];
+                }
+            }
+        }
+        return max;
+    }
+
     // ========== History Storage ==========
 
     /**

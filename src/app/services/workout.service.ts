@@ -84,9 +84,12 @@ export class WorkoutService {
         // Persist to storage
         this.storageRepo.saveWeight(workoutId, exerciseDescription, weight, setIndex);
 
+        // Calculate maximum true weight for this exercise in the current workout
+        const maxSessionWeight = this.storageRepo.getMaxWeightForExercise(workoutId, exerciseDescription);
+
         // Save to History (using active session start time or current time)
         const sessionDate = this.activeWorkoutSignal()?.startTime || Date.now();
-        this.storageRepo.saveToHistory(exerciseDescription, weight, sessionDate);
+        this.storageRepo.saveToHistory(exerciseDescription, maxSessionWeight, sessionDate);
 
         // Update in-memory state
         this.updateWorkoutWeight(workoutId, exerciseDescription, weight, setIndex);
