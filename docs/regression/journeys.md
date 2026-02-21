@@ -18,7 +18,7 @@
 | FAB | Laranja, bottom-right, ícone lixeira |
 
 ### Evidência
-![J1 Home](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/j1_home_baseline_1769207681414.png)
+![J1 Home](./images/j1_home_baseline.png)
 
 ---
 
@@ -34,7 +34,7 @@
 | Botão | "▶ Iniciar Treino" verde, full-width |
 
 ### Evidência
-![J2 Detail](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/j2_workout_detail_baseline_1769208106084.png)
+![J2 Detail](./images/j2_workout_detail_baseline.png)
 
 ---
 
@@ -48,7 +48,7 @@
 | Ações | "Canc" e "OK" |
 
 ### Evidência
-![J4 Edit](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/j4_edit_carga_baseline_1769208145572.png)
+![J4 Edit](./images/j4_edit_carga_baseline.png)
 
 ---
 
@@ -64,7 +64,7 @@
 | Botão | "■ Finalizar Treino" laranja |
 
 ### Evidência
-![J5 Active](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/j5_checkbox_baseline_1769208170314.png)
+![J5 Active](./images/j5_checkbox_baseline.png)
 
 ---
 

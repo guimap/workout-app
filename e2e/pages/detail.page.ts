@@ -30,6 +30,18 @@ export class DetailPage {
     // Action Button Selectors
     readonly startButton = () => this.page.locator('button:has-text("Iniciar Treino")');
     readonly finishButton = () => this.page.locator('button:has-text("Finalizar Treino")');
+    readonly manualRestButton = () => this.page.locator('button:has-text("Descanso 30s"), button:has-text("Iniciar Descanso")');
+    readonly unitToggleButton = () => this.page.locator('.unit-toggle-btn');
+
+    // New UX Feature Selectors
+    readonly restTimerContainer = () => this.page.locator('.rest-timer-container');
+    readonly restTimerValue = () => this.page.locator('.timer-value');
+    readonly restTimerAdd30sButton = () => this.page.locator('button:has-text("+30s")');
+    readonly restTimerSkipButton = () => this.page.locator('.skip-btn');
+    readonly sessionVolume = () => this.page.locator('p.text-muted', { hasText: 'Vol:' });
+    readonly prBadges = () => this.page.locator('.pr-badge');
+    readonly previousRecordLabels = () => this.page.locator('.exercise-previous');
+    readonly titleTooltip = () => this.page.locator('#title-tooltip');
 
     // Actions
     async goto(workoutId: string) {
@@ -107,5 +119,18 @@ export class DetailPage {
 
     async expectWeightValue(index: number, value: string) {
         await expect(this.weightButtons().nth(index)).toContainText(value);
+    }
+
+    // New UX Assertions
+    async expectRestTimerVisible() {
+        await expect(this.restTimerContainer()).toBeVisible();
+    }
+
+    async expectRestTimerHidden() {
+        await expect(this.restTimerContainer()).not.toBeVisible();
+    }
+
+    async expectTooltipVisible() {
+        await expect(this.titleTooltip()).toBeVisible();
     }
 }

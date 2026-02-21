@@ -48,7 +48,7 @@
 | Badge | Letra em borda verde | ✅ Idêntico |
 | FAB | Laranja, bottom-right | ✅ Idêntico |
 
-![J1 Home](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/regression_j1_home_1769212607650.png)
+![J1 Home](./images/regression_j1_home.png)
 
 ---
 
@@ -62,7 +62,7 @@
 | BI-SET | Badge verde outline | ✅ Idêntico |
 | Botão | Verde "Iniciar Treino" | ✅ Idêntico |
 
-![J2 Detail](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/regression_j2_detail_1769212685688.png)
+![J2 Detail](./images/regression_j2_detail.png)
 
 ---
 
@@ -74,7 +74,7 @@
 | Checkboxes | Aparecem | ✅ Funcional |
 | Botão | Laranja "Finalizar" | ✅ Idêntico |
 
-![J3 Active](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/regression_j3_active_1769212711454.png)
+![J3 Active](./images/regression_j3_active.png)
 
 ---
 
@@ -86,7 +86,7 @@
 | Salvar | Persiste valor | ✅ Funcional |
 | Display | Mostra "25 kg" | ✅ Funcional |
 
-![J4 Weight](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/regression_j4_weight_1769212752714.png)
+![J4 Weight](./images/regression_j4_weight.png)
 
 ---
 
@@ -98,7 +98,7 @@
 | Card | Borda verde | ✅ Funcional |
 | Contador | Atualiza | ✅ Funcional |
 
-![J5 Checkbox](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/regression_j5_checkbox_1769212768844.png)
+![J5 Checkbox](./images/regression_j5_checkbox.png)
 
 ---
 
@@ -110,7 +110,7 @@
 | Timer | Continua contando | ✅ Funcional |
 | Exercícios | Marcações preservadas | ✅ Funcional |
 
-![J6 Persistence](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/regression_j6_persistence.png)
+![J6 Persistence](./images/regression_j6_persistence.png)
 
 ---
 
@@ -154,4 +154,4 @@ src/app/
 
 ## Gravação do Teste
 
-![Regression Test Recording](C:/Users/guiih/.gemini/antigravity/brain/4f640e44-7a3b-4973-97a2-a13205621d2f/regression_j1_j5_1769212599392.webp)
+![Regression Test Recording](./images/regression_j1_j5_recording.webp)
