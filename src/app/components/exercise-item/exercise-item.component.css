@@ -27,6 +27,31 @@
 
 .exercise-series {
     font-size: 0.875rem;
+    font-weight: var(--font-weight-medium);
+}
+
+.exercise-previous {
+    font-size: 0.75rem;
+    margin-top: 2px;
+}
+
+.exercise-previous span {
+    color: var(--foreground);
+    font-weight: var(--font-weight-medium);
+}
+
+.pr-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 2px 4px;
+    border-radius: 4px;
+    z-index: 2;
+    box-shadow: 0 0 8px rgba(160, 240, 60, 0.4);
 }
 
 /* Weight */
@@ -43,20 +68,19 @@
 }
 
 .weight-value {
-    display: flex;
+    display: inline-flex;
     align-items: baseline;
     gap: 2px;
-    background: var(--secondary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    color: var(--muted-foreground);
-    font-size: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--foreground);
+    font-family: inherit;
+    font-size: 1.125rem;
     font-weight: var(--font-weight-medium);
+    padding: var(--spacing-xs) 0;
     cursor: pointer;
-    transition: all var(--transition-fast);
-    min-width: 50px;
-    justify-content: center;
+    min-height: 24px;
+    position: relative;
 }
 
 .weight-value:hover {

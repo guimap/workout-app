@@ -1,7 +1,11 @@
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Exercise, ParsedSet, hasMultipleSets, parseSeries } from '../../models/workout.model';
+import { SettingsService } from '../../services/settings.service';
+import { WorkoutService } from '../../services/workout.service';
+import { ExerciseHistoryRecord } from '../../repository/workout-storage.repository';
+import { kgToLb, lbToKg, formatWeight, roundWeight } from '../../utils/unit.utils';
 
 /**
  * Weight Save Event
@@ -48,6 +52,10 @@ export class ExerciseItemComponent {
     // Internal state for editing
     editingSetIndex = signal<number | null>(null);
 
+    // Dependencies
+    settingsService = inject(SettingsService);
+    workoutService = inject(WorkoutService);
+
     // Computed properties
     get hasSets(): boolean {
         return hasMultipleSets(this.exercise.series);
@@ -67,11 +75,39 @@ export class ExerciseItemComponent {
     }
 
     getWeightDisplay(setIndex: number): string {
-        const weight = this.getWeightForSet(setIndex);
-        if (weight !== undefined && weight > 0) {
-            return `${weight}`;
+        const weightKg = this.getWeightForSet(setIndex);
+        if (weightKg !== undefined && weightKg > 0) {
+            const unit = this.settingsService.unitSignal();
+            const value = unit === 'lb' ? kgToLb(weightKg) : weightKg;
+            return `${roundWeight(value, unit)}`;
         }
         return '—';
+    }
+
+    getCurrentUnit(): string {
+        return this.settingsService.unitSignal();
+    }
+
+    getPreviousRecord(): ExerciseHistoryRecord | null {
+        return this.workoutService.getPreviousRecord(this.exercise.description);
+    }
+
+    getPreviousRecordDisplay(): string {
+        const record = this.getPreviousRecord();
+        if (!record) return '';
+
+        const unit = this.settingsService.unitSignal();
+        const value = unit === 'lb' ? kgToLb(record.weight) : record.weight;
+        return `${roundWeight(value, unit)} ${unit}`;
+    }
+
+    isPersonalRecord(setIndex: number): boolean {
+        const currentKg = this.getWeightForSet(setIndex);
+        if (!currentKg || currentKg <= 0) return false;
+
+        const prKg = this.workoutService.getPersonalRecord(this.exercise.description);
+        // Se bateu o PR e é maior que 0
+        return prKg > 0 && currentKg >= prKg;
     }
 
     startEdit(setIndex: number): void {
@@ -87,12 +123,15 @@ export class ExerciseItemComponent {
     }
 
     saveWeight(setIndex: number, value: string): void {
-        const weight = parseFloat(value);
-        if (!isNaN(weight) && weight >= 0) {
+        const weightInput = parseFloat(value);
+        if (!isNaN(weightInput) && weightInput >= 0) {
+            const unit = this.settingsService.unitSignal();
+            const weightKg = unit === 'lb' ? lbToKg(weightInput) : weightInput;
+
             this.weightSave.emit({
                 exerciseDescription: this.exercise.description,
                 setIndex,
-                weight
+                weight: weightKg
             });
         }
         this.editingSetIndex.set(null);

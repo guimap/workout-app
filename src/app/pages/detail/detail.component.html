@@ -1,8 +1,19 @@
 <div class="container animate-fadeIn">
     <!-- Header Component -->
     <app-header [title]="workout()?.name || ''" [completedCount]="completedCount()" [totalCount]="totalExercises()"
-        [timer]="formattedTimer()" [showTimer]="isWorkoutActive()" (back)="goBack()">
+        [timer]="formattedTimer()" [showTimer]="isWorkoutActive()" [volume]="sessionVolumeDisplay()" (back)="goBack()">
     </app-header>
+
+    <div class="workout-actions animate-fadeIn">
+        <button class="btn btn-secondary btn-sm" (click)="startManualRest()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Descanso 30s
+        </button>
+    </div>
 
     <!-- Exercise List -->
     @if (workout()) {
@@ -38,6 +49,9 @@
     }
 </div>
 }
+
+<!-- Floating Rest Timer -->
+<app-rest-timer></app-rest-timer>
 
 <!-- Start/Finish Button Component -->
 <app-start-button [isActive]="isWorkoutActive()" (start)="startWorkout()" (finish)="finishWorkout()">

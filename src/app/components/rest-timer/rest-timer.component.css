@@ -1,0 +1,106 @@
+.rest-timer-container {
+    position: fixed;
+    bottom: 80px;
+    /* Acima do botão principal fixo */
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    padding: 0 var(--spacing-md);
+    pointer-events: none;
+    /* Container não bloqueia clicks nas laterais */
+}
+
+.rest-timer-card {
+    background-color: var(--secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 320px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    pointer-events: auto;
+    /* Card em si recebe clicks */
+}
+
+.timer-display {
+    display: flex;
+    flex-direction: column;
+}
+
+.timer-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.timer-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--primary);
+}
+
+.timer-value.ended {
+    color: var(--destructive);
+    animation: flash 1s infinite alternate;
+}
+
+.timer-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--foreground);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xs);
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+}
+
+.btn-icon:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--primary);
+}
+
+.btn-action-text {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-action-text:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.skip-btn {
+    color: var(--muted-foreground);
+}
+
+@keyframes flash {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
+}

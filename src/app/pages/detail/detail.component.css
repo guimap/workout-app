@@ -146,6 +146,34 @@
 
 .exercise-series {
     font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Workout Actions Overlay / Toolbar */
+.workout-actions {
+    display: flex;
+    justify-content: center;
+    padding: 0 var(--spacing-md);
+    margin-top: 8px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    border-radius: var(--radius-full);
+}
+
+.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 0.875rem;
+    min-height: 36px;
+    gap: var(--spacing-xs);
+}
+
+.btn-sm svg {
+    color: var(--primary);
 }
 
 /* Weight */

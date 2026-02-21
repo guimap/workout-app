@@ -6,6 +6,8 @@ import { WorkoutService } from '../../services/workout.service';
 import { HeaderComponent } from '../../components/header/header.component';
 import { StartButtonComponent } from '../../components/start-button/start-button.component';
 import { ExerciseItemComponent, WeightSaveEvent } from '../../components/exercise-item/exercise-item.component';
+import { RestTimerComponent } from '../../components/rest-timer/rest-timer.component';
+import { RestTimerService } from '../../services/rest-timer.service';
 import {
     Workout,
     Exercise,
@@ -17,6 +19,8 @@ import {
     hasMultipleSets,
     parseSeries
 } from '../../models/workout.model';
+import { kgToLb, formatWeight } from '../../utils/unit.utils';
+import { SettingsService } from '../../services/settings.service';
 
 /**
  * Detail Page Component
@@ -27,7 +31,7 @@ import {
 @Component({
     selector: 'app-detail',
     standalone: true,
-    imports: [CommonModule, FormsModule, HeaderComponent, StartButtonComponent, ExerciseItemComponent],
+    imports: [CommonModule, FormsModule, HeaderComponent, StartButtonComponent, ExerciseItemComponent, RestTimerComponent],
     templateUrl: './detail.component.html',
     styleUrl: './detail.component.css'
 })
@@ -35,6 +39,8 @@ export class DetailComponent implements OnInit, OnDestroy {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
     private workoutService = inject(WorkoutService);
+    public settingsService = inject(SettingsService);
+    private restTimerService = inject(RestTimerService);
 
     private timerInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -74,6 +80,39 @@ export class DetailComponent implements OnInit, OnDestroy {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    });
+
+    sessionVolumeDisplay = computed(() => {
+        const w = this.workout();
+        if (!w || !this.isWorkoutActive()) return null;
+
+        let totalVolumeKg = 0;
+
+        for (const item of w.exercices) {
+            const exercises = isExerciseGroup(item) ? item : [item];
+            for (const ex of exercises) {
+                if (this.workoutService.isExerciseCompleted(ex.description)) {
+                    const sets = hasMultipleSets(ex.series) ? parseSeries(ex.series) : [{ label: 'Carga', reps: ex.series, isFailure: false }];
+
+                    for (let i = 0; i < sets.length; i++) {
+                        if (sets[i].isFailure) continue;
+                        const weight = this.workoutService.getWeight(w.id, ex.description, i);
+                        if (weight && weight > 0) {
+                            // Tenta extrair um número razoável das reps (ex: "10", "8a12" -> 8)
+                            const match = sets[i].reps.match(/\d+/);
+                            const repsCount = match ? parseInt(match[0], 10) : 1; // Default to 1 se não achar nada literal
+                            totalVolumeKg += (weight * repsCount);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (totalVolumeKg === 0) return null;
+
+        const unit = this.settingsService.unitSignal();
+        const displayValue = unit === 'lb' ? kgToLb(totalVolumeKg) : totalVolumeKg;
+        return formatWeight(displayValue, unit);
     });
 
     progressPercentage = computed(() => {
@@ -187,6 +226,11 @@ export class DetailComponent implements OnInit, OnDestroy {
     toggleExercise(exercise: Exercise): void {
         if (!this.isWorkoutActive()) return;
         this.workoutService.toggleExerciseCompleted(exercise.description);
+
+        // Start rest timer if it was mark as completed now
+        if (this.workoutService.isExerciseCompleted(exercise.description)) {
+            this.restTimerService.startTimer();
+        }
     }
 
     isCompleted(exercise: Exercise): boolean {
@@ -224,6 +268,13 @@ export class DetailComponent implements OnInit, OnDestroy {
         // Refresh workout data
         const updated = this.workoutService.getWorkoutById(w.id);
         if (updated) this.workout.set(updated);
+
+        // Auto start rest timer on weight save
+        this.restTimerService.startTimer();
+    }
+
+    startManualRest(): void {
+        this.restTimerService.startTimer(30);
     }
 
     private startTimer(): void {

@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SettingsService } from '../../services/settings.service';
 
 /**
  * Header Component
@@ -27,7 +28,13 @@ export class HeaderComponent {
     @Input() totalCount = 0;
     @Input() timer = '00:00';
     @Input() showTimer = false;
+    @Input() volume: string | null = null;
     @Output() back = new EventEmitter<void>();
+
+    settingsService = inject(SettingsService);
+
+    showTooltip = false;
+    private touchTimeout: any;
 
     get progressPercentage(): number {
         if (this.totalCount === 0) return 0;
@@ -36,5 +43,43 @@ export class HeaderComponent {
 
     onBack(): void {
         this.back.emit();
+    }
+
+    checkTruncationAndShow(element: HTMLElement): void {
+        if (element.scrollWidth > element.clientWidth) {
+            this.showTooltip = true;
+        }
+    }
+
+    hideTooltip(): void {
+        this.showTooltip = false;
+    }
+
+    onTouchStart(element: HTMLElement): void {
+        if (element.scrollWidth <= element.clientWidth) return;
+
+        this.touchTimeout = setTimeout(() => {
+            this.showTooltip = true;
+        }, 450);
+    }
+
+    onTouchEnd(): void {
+        clearTimeout(this.touchTimeout);
+        // Fallback tap: se soltar rápido e formos mobile, toggle.
+        // Como 'mouseenter' não dispara sempre no mobile touch,
+        // gerenciaremos o toggle via click nativo amarrado no template para fallback.
+    }
+
+    toggleTooltip(element: HTMLElement): void {
+        if (element.scrollWidth > element.clientWidth) {
+            this.showTooltip = !this.showTooltip;
+
+            if (this.showTooltip) {
+                // Auto-hide depois de um tempo no touch
+                setTimeout(() => {
+                    this.showTooltip = false;
+                }, 3000);
+            }
+        }
     }
 }

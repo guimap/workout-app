@@ -8,20 +8,42 @@
     </button>
 
     <div class="header-info">
-        <h1>{{ title }}</h1>
-        <p class="text-muted">{{ completedCount }} de {{ totalCount }} exercícios</p>
+        <div class="title-container">
+            <h1 #titleEl tabindex="0" (mouseenter)="checkTruncationAndShow(titleEl)" (mouseleave)="hideTooltip()"
+                (focus)="checkTruncationAndShow(titleEl)" (blur)="hideTooltip()" (touchstart)="onTouchStart(titleEl)"
+                (touchend)="onTouchEnd()" (click)="toggleTooltip(titleEl)"
+                [attr.aria-describedby]="showTooltip ? 'title-tooltip' : null">
+                {{ title }}
+            </h1>
+            @if (showTooltip) {
+            <div id="title-tooltip" role="tooltip" class="title-tooltip visible">
+                {{ title }}
+            </div>
+            }
+        </div>
+        <p class="text-muted">{{ completedCount }} de {{ totalCount }} exercícios @if (volume) { • Vol: <strong>{{
+                volume }}</strong> }</p>
         <div class="progress-bar-container">
             <div class="progress-bar-fill" [style.width.%]="progressPercentage"></div>
         </div>
     </div>
 
-    @if (showTimer) {
-    <div class="timer-badge">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
-            <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
-        <span>{{ timer }}</span>
+    <div class="header-actions">
+        <!-- Toggle Unit Button -->
+        <button class="unit-toggle-btn" (click)="settingsService.toggleUnit()">
+            <span [class.active]="settingsService.unitSignal() === 'kg'">kg</span>
+            <span class="unit-separator">/</span>
+            <span [class.active]="settingsService.unitSignal() === 'lb'">lb</span>
+        </button>
+
+        @if (showTimer) {
+        <div class="timer-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span>{{ timer }}</span>
+        </div>
+        }
     </div>
-    }
 </header>

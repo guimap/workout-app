@@ -7,7 +7,7 @@ import {
     isExerciseGroup
 } from '../models/workout.model';
 import { WorkoutHttpRepository } from '../repository/workout-http.repository';
-import { WorkoutStorageRepository } from '../repository/workout-storage.repository';
+import { WorkoutStorageRepository, ExerciseHistoryRecord } from '../repository/workout-storage.repository';
 
 /**
  * Workout Service
@@ -84,6 +84,10 @@ export class WorkoutService {
         // Persist to storage
         this.storageRepo.saveWeight(workoutId, exerciseDescription, weight, setIndex);
 
+        // Save to History (using active session start time or current time)
+        const sessionDate = this.activeWorkoutSignal()?.startTime || Date.now();
+        this.storageRepo.saveToHistory(exerciseDescription, weight, sessionDate);
+
         // Update in-memory state
         this.updateWorkoutWeight(workoutId, exerciseDescription, weight, setIndex);
     }
@@ -93,6 +97,23 @@ export class WorkoutService {
      */
     getWeight(workoutId: string, exerciseDescription: string, setIndex: number = 0): number | undefined {
         return this.storageRepo.getWeight(workoutId, exerciseDescription, setIndex);
+    }
+
+    /**
+     * Get previous record for an exercise (from past sessions)
+     */
+    getPreviousRecord(exerciseDescription: string): ExerciseHistoryRecord | null {
+        // We use the current session's start time to filter out today's records.
+        // If not in a session, we use Date.now()
+        const sessionDate = this.activeWorkoutSignal()?.startTime || Date.now();
+        return this.storageRepo.getPreviousRecord(exerciseDescription, sessionDate);
+    }
+
+    /**
+     * Get PR (Personal Record) for an exercise
+     */
+    getPersonalRecord(exerciseDescription: string): number {
+        return this.storageRepo.getPersonalRecord(exerciseDescription);
     }
 
     // ========== Workout Session Management ==========
