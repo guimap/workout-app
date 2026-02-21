@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.3] - 2026-02-20
+
+### Fixed
+- **Rest Timer Scope:** Prevented the automatic Rest Timer modal from persistently surviving screen destructions. The `RestTimerService` is now explicitly closed within `DetailComponent.ngOnDestroy`, restricting the timer to the active workout session's lifecycle.
+- **UI Symmetry (Single Set):** Adjusted `exercise-item.component.css` to inject `min-width` and symmetric lateral padding into the base `.weight-value` class, correcting the visually collapsed alignment of single-set input displays (e.g., Supino Inclinado) relative to adjacent multi-set inputs.
+- **CI/CD Automation:** Added the Release and QA bots locally acting as an automated GitHub Tag publication pipeline.
+
+---
+
 ## [2.0.2] - 2026-02-20
 
 ### Fixed
