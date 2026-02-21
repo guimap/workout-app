@@ -147,6 +147,7 @@ export class DetailComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.stopTimer();
+        this.restTimerService.closeTimer();
     }
 
     goBack(): void {

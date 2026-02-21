@@ -70,6 +70,7 @@
 .weight-value {
     display: inline-flex;
     align-items: baseline;
+    justify-content: center;
     gap: 2px;
     background: transparent;
     border: none;
@@ -77,9 +78,10 @@
     font-family: inherit;
     font-size: 1.125rem;
     font-weight: var(--font-weight-medium);
-    padding: var(--spacing-xs) 0;
+    padding: var(--spacing-xs) var(--spacing-sm);
     cursor: pointer;
     min-height: 24px;
+    min-width: 42px;
     position: relative;
 }
 
