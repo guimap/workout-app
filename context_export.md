@@ -18,7 +18,7 @@ WebApp mobile-first desenvolvido em Angular (v18+) para gerenciamento de treinos
 ### Core
 - [x] **Lista de Treinos Integrada:** Carrega dados de JSON externo (`https://d3fgovm6dm6a55.cloudfront.net/treino.json`).
 - [x] **Persistência Local:** Salva pesos e estado do treino no `localStorage`.
-- [x] **Timer Resiliente:** Cronômetro que resiste à suspensão do navegador mobile (usa `Date.now()` vs [startTime](file:///c:/Users/guiih/OneDrive/Documentos/Projetos/js/treino-v2/src/app/components/workout-detail/workout-detail.component.ts#188-201)).
+- [x] **Timer Resiliente:** Cronômetro que resiste à suspensão do navegador mobile (usa `Date.now()` vs `startTime`).
 
 ### Interface do Usuário (UI)
 - [x] **Home:** Lista de treinos com badges (A, B, C).
